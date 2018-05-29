@@ -1,5 +1,8 @@
-<?php include('config.php'); ?>
-<?php include(INCLUDE_PATH . '/logic/userSignup.php'); ?>
+<?php include('../../config.php'); ?>
+<?php include(INCLUDE_PATH . '/logic/common_functions.php') ?>
+<?php include(ROOT_PATH . '/admin/users/userLogic.php'); ?>
+<?php  $roles = getAllRoles(); ?>
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,14 +22,35 @@
   </head>
   <body>
 
+    <?php include(INCLUDE_PATH . "/layouts/admin_navbar.php") ?>
+
     <div class="container">
       <div class="row">
         <div class="col-md-4 col-md-offset-4">
-          <h2 class="text-center">Sign up</h2>
-          <form class="form" action="signup.php" method="post" enctype="multipart/form-data">
+
+          <a href="userList.php" class="btn btn-primary">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            Users
+          </a>
+          <hr>
+
+
+          <?php if ($isEditting === true ): ?>
+            <h2 class="text-center">Update Admin user</h2>
+          <?php else: ?>
+            <h2 class="text-center">Create Admin user</h2>
+          <?php endif; ?>
+          <br>
+
+
+          <form class="form" action="userForm.php" method="post" enctype="multipart/form-data">
             <!-- row for first and last name -->
             <div class="row">
               <div class="col-md-6">
+
+                <?php if ($isEditting === true): ?>
+                  <input type="hidden" name="user_id" value="<?php echo $user_id ?>">
+                <?php endif; ?>
 
                 <!-- Firstname  -->
                 <?php if (isset($errors['firstname'])): ?>
@@ -84,17 +108,16 @@
               <?php endif; ?>
             </div>
 
-            <?php if (isset($errors['passwordConf'])): ?>
-              <div class="form-group has-error">
-            <?php else: ?>
-              <div class="form-group">
-            <?php endif; ?>
-              <label class="control-label">Password confirmation</label>
-              <input type="password" name="passwordConf" class="form-control">
-              <?php if (isset($errors['passwordConf'])): ?>
-                <span class="help-block"><?php echo $errors['passwordConf'] ?></span>
-              <?php endif; ?>
+            <div class="form-group">
+              <label class="control-label">User Role</label>
+              <select class="form-control" name="role_id">
+                <option value="" ></option>
+                <?php foreach ($roles as $role): ?>
+                  <option value="<?php echo $role['id'] ?>"><?php echo $role['name'] ?></option>
+                <?php endforeach; ?>
+              </select>
             </div>
+
             <!-- row for profile image upload -->
             <div class="row">
               <div class="col-md-6">
@@ -109,7 +132,11 @@
                   <input type="file" name="profile_picture" id="profile_picture" value="" style="display: none;">
                 </div>
                 <div class="form-group">
-                  <button type="submit" name="signup_btn" class="btn btn-success">Sign up</button>
+                  <?php if ($isEditting === true ): ?>
+                    <button type="submit" name="update_user" class="btn btn-primary">Updpate user</button>
+                  <?php else: ?>
+                    <button type="submit" name="save_user" class="btn btn-success">Save user</button>
+                  <?php endif; ?>
                 </div>
               </div>
               <div class="col-md-6">
@@ -117,7 +144,6 @@
               </div>
             </div>
             <!-- // end row -->
-            <p>Aready have an account? <a href="login.php">Sign in</a></p>
           </form>
         </div>
       </div>

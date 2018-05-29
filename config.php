@@ -13,4 +13,8 @@
   // Path to include folder
 	define ('INCLUDE_PATH', realpath(dirname(__FILE__) . '/includes' ));
 	define('BASE_URL', 'http://localhost/cwa/user-accounts/');
+
+
+	
+
 ?>
